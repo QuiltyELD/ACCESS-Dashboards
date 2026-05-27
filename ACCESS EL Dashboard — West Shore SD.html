@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<!-- saved from url=(0058)file:///Users/quiltya/Downloads/access_dashboard_v2_1.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACCESS EL Dashboard — West Shore SD</title>
+<script src="./ACCESS EL Dashboard — West Shore SD_files/xlsx.full.min.js"></script>
+<script src="./ACCESS EL Dashboard — West Shore SD_files/chart.umd.js"></script>
+<style>
+:root{
+  --bg:#f8f7f4;--surface:#fff;--surface2:#f1f0ed;--border:rgba(0,0,0,.1);--border2:rgba(0,0,0,.18);
+  --text:#1a1917;--text2:#6b6a67;--text3:#9e9d9a;
+  --navy:#185FA5;--navy-l:#E6F1FB;--navy-t:#185FA5;
+  --red:#A32D2D;--red-l:#FCEBEB;--amber:#854F0B;--amber-l:#FAEEDA;
+  --green:#3B6D11;--green-l:#EAF3DE;--coral:#993C1D;--coral-l:#FAECE7;
+  --purple:#534AB7;--purple-l:#EEEDFE;--r:10px;--rs:6px;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+}
+@media(prefers-color-scheme:dark){
+  :root{--bg:#111110;--surface:#1c1c1a;--surface2:#242422;--border:rgba(255,255,255,.1);--border2:rgba(255,255,255,.18);
+    --text:#f0ede8;--text2:#9e9d9a;--text3:#6b6a67;--navy-l:#0c2a4a;--navy-t:#85B7EB;
+    --red-l:#2a1010;--amber-l:#2a1c08;--green-l:#152708;--coral-l:#2a1208;--purple-l:#1e1b40;}
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Georgia',serif;background:var(--bg);color:var(--text);font-size:14px;min-height:100vh}
+.app{display:flex;min-height:100vh}
+.sidebar{width:220px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:1.5rem 0;position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column}
+.main{flex:1;padding:2rem;overflow:auto;min-width:0}
+.logo{padding:0 1.25rem 1.5rem;border-bottom:1px solid var(--border);margin-bottom:1rem}
+.logo-title{font-size:15px;font-weight:700;letter-spacing:-.01em;line-height:1.3}
+.logo-sub{font-size:11px;color:var(--text3);margin-top:2px;font-style:italic}
+.nav-section{padding:0 .75rem;margin-bottom:.25rem}
+.nav-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);padding:.5rem .5rem .25rem;font-family:sans-serif}
+.nav-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--rs);cursor:pointer;font-size:13px;color:var(--text2);transition:all .15s;font-family:sans-serif}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item.active{background:var(--navy-l);color:var(--navy-t);font-weight:600}
+.nav-item svg{width:16px;height:16px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.panel{display:none}.panel.active{display:block}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem;box-shadow:var(--shadow)}
+.card-title{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:1rem;font-family:sans-serif;font-weight:600}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:1.25rem}
+.metric{background:var(--surface2);border-radius:var(--rs);padding:12px 14px}
+.metric-label{font-size:11px;color:var(--text3);font-family:sans-serif;margin-bottom:3px}
+.metric-value{font-size:22px;font-weight:700;font-family:sans-serif;letter-spacing:-.02em}
+.metric-sub{font-size:10px;color:var(--text3);font-family:sans-serif;margin-top:2px}
+.metric-growth{font-size:13px;font-weight:700;font-family:sans-serif}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;font-family:sans-serif;white-space:nowrap}
+.badge-ltel{background:var(--coral-l);color:var(--coral)}
+.badge-iep{background:var(--navy-l);color:var(--navy-t)}
+.badge-low{background:var(--red-l);color:var(--red)}
+.badge-high{background:var(--green-l);color:var(--green)}
+.badge-avg{background:var(--amber-l);color:var(--amber)}
+.badge-new{background:var(--purple-l);color:var(--purple)}
+.badge-transferred{background:var(--surface2);color:var(--text3)}
+.badge-consult{background:var(--purple-l);color:var(--purple)}
+.badge-wsod{background:var(--amber-l);color:var(--amber)}
+.upload-area{border:1.5px dashed var(--border2);border-radius:var(--r);padding:1.5rem;text-align:center;cursor:pointer;transition:all .15s;margin-bottom:.875rem;background:var(--surface)}
+.upload-area:hover{border-color:var(--navy-t);background:var(--navy-l)}
+.upload-area input{display:none}
+.upload-area h3{font-size:14px;font-weight:600;font-family:sans-serif;margin:.5rem 0 .25rem}
+.upload-area p{font-size:12px;color:var(--text2);font-family:sans-serif}
+.file-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:.5rem}
+.file-tag{display:inline-flex;align-items:center;gap:4px;background:var(--green-l);color:var(--green);padding:3px 9px;border-radius:20px;font-size:11px;font-family:sans-serif;font-weight:600}
+.search-bar{display:flex;gap:8px;margin-bottom:.875rem;flex-wrap:wrap}
+.search-bar input,.search-bar select{height:36px;padding:0 12px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--surface);color:var(--text);font-family:sans-serif;font-size:13px}
+.search-bar input{flex:2;min-width:160px}
+.search-bar select{flex:1;min-width:120px}
+.status-toggle{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:.875rem}
+.status-toggle label{font-size:12px;color:var(--text2);display:flex;align-items:center;gap:5px;cursor:pointer;font-family:sans-serif}
+.student-row{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:var(--rs);cursor:pointer;transition:background .1s;font-family:sans-serif}
+.student-row:hover{background:var(--surface2)}
+.student-name{flex:1;font-size:13px;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.student-meta{font-size:12px;color:var(--text2);white-space:nowrap}
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--text2);cursor:pointer;margin-bottom:1rem;font-family:sans-serif;padding:6px 10px;border-radius:var(--rs);border:1px solid var(--border)}
+.back-btn:hover{background:var(--surface2)}
+.avatar{width:48px;height:48px;border-radius:50%;background:var(--navy-l);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:var(--navy-t);flex-shrink:0;font-family:sans-serif}
+.demo-table{width:100%;font-size:13px;font-family:sans-serif}
+.demo-table td{padding:4px 0}
+.demo-table td:first-child{color:var(--text2);width:160px}
+.demo-table td:last-child{font-weight:600}
+.pl-row{display:flex;align-items:center;gap:8px;margin:3px 0}
+.pl-label{font-size:12px;color:var(--text2);width:100px;flex-shrink:0;font-family:sans-serif}
+.pl-bg{flex:1;height:7px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.pl-fill{height:100%;border-radius:4px}
+.pl-num{font-size:12px;color:var(--text2);width:30px;text-align:right;font-family:sans-serif;font-weight:600}
+.goal-bg{width:100%;height:10px;background:var(--surface2);border-radius:5px;overflow:hidden;margin:6px 0}
+.goal-fill{height:100%;border-radius:5px}
+.goal-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);font-family:sans-serif}
+.chart-wrap{position:relative;width:100%}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:700px){.two-col{grid-template-columns:1fr}.sidebar{width:180px}.main{padding:1rem}}
+.growth-table{width:100%;font-size:12px;font-family:sans-serif;border-collapse:collapse}
+.growth-table th{text-align:center;padding:5px 8px;font-size:11px;font-weight:600;color:var(--text3);border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.04em}
+.growth-table th:first-child{text-align:left}
+.growth-table td{text-align:center;padding:5px 8px;border-bottom:1px solid var(--border)}
+.growth-table td:first-child{text-align:left;font-weight:600;color:var(--text2)}
+.growth-table tr:last-child td{border-bottom:none}
+.delta-pos{color:var(--green);font-weight:700}
+.delta-neg{color:var(--red);font-weight:700}
+.delta-new{color:var(--purple);font-weight:600;font-style:italic}
+.section-head{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin:1.25rem 0 .625rem;font-family:sans-serif;font-weight:600}
+.flag-row{display:flex;align-items:center;gap:6px;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;font-family:sans-serif;flex-wrap:wrap}
+.flag-row:last-child{border-bottom:none}
+.hint{font-size:12px;color:var(--text2);padding:10px 14px;background:var(--navy-l);border-radius:var(--rs);border-left:3px solid var(--navy-t);margin-bottom:1rem;font-family:sans-serif}
+.warn{font-size:12px;color:var(--amber);padding:10px 14px;background:var(--amber-l);border-radius:var(--rs);border-left:3px solid var(--amber);margin-bottom:1rem;font-family:sans-serif}
+.empty-state{text-align:center;padding:2.5rem;color:var(--text3);font-size:14px;font-family:sans-serif}
+.school-yr-row{display:flex;align-items:center;gap:8px;font-size:12px;margin-bottom:4px;font-family:sans-serif}
+.dist-bar{flex:1;height:10px;border-radius:5px;overflow:hidden;display:flex}
+</style>
+</head>
+<body>
+<div class="app">
+  <nav class="sidebar" role="navigation" aria-label="Dashboard navigation">
+    <div class="logo">
+      <div class="logo-title">ACCESS Dashboard</div>
+      <div class="logo-sub">West Shore School District</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Setup</div>
+      <div class="nav-item active" onclick="showPanel(&#39;upload&#39;)" id="nav-upload">
+        <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"></polyline><line x1="12" y1="12" x2="12" y2="21"></line><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"></path></svg>
+        Data files
+      </div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Dashboards</div>
+      <div class="nav-item" onclick="showPanel(&#39;student&#39;)" id="nav-student">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        Student
+      </div>
+      <div class="nav-item" onclick="showPanel(&#39;building&#39;)" id="nav-building">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M3 9h18M9 21V9"></path></svg>
+        Building
+      </div>
+      <div class="nav-item" onclick="showPanel(&#39;district&#39;)" id="nav-district">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+        District
+      </div>
+    </div>
+    <div style="margin-top:auto;padding:1rem 1.25rem;font-size:11px;color:var(--text3);font-family:sans-serif;border-top:1px solid var(--border)">
+      All data stays in your browser — nothing is sent anywhere.
+    </div>
+  </nav>
+
+  <main class="main">
+    <div id="panel-upload" class="panel active" style="display: block;">
+      <h1 style="font-size:22px;font-weight:700;margin-bottom:.25rem">Data files</h1>
+      <p style="color:var(--text2);font-size:14px;margin-bottom:1.5rem;font-family:sans-serif">Upload your ACCESS score files and student data file. All processing happens locally in your browser.</p>
+      <div class="upload-area" onclick="document.getElementById(&#39;score-input&#39;).click()">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text3);margin:0 auto"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+        <h3>ACCESS score files</h3>
+        <p>Select one or more .xlsx files — one per year</p>
+        <input id="score-input" type="file" accept=".xlsx" multiple="" onchange="handleScoreFiles(this.files)">
+      </div>
+      <div id="score-tags" class="file-tags"></div>
+      <div style="margin-top:1rem"></div>
+      <div class="upload-area" onclick="document.getElementById(&#39;student-input&#39;).click()">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text3);margin:0 auto"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+        <h3>Student data file</h3>
+        <p>Needs: State Student ID, Student Name, demographics, Length of Time in LEP/ELL Program, Attainment SS, Attainment Year, Base PL, Base SS, Base Year</p>
+        <input id="student-input" type="file" accept=".xlsx,.csv" onchange="handleStudentFile(this.files[0])">
+      </div>
+      <div id="student-tag" class="file-tags"></div>
+      <div id="upload-summary" style="margin-top:1.25rem"></div>
+    </div>
+
+    <div id="panel-student" class="panel" style="display: none;">
+      <h1 style="font-size:22px;font-weight:700;margin-bottom:1rem">Student dashboard</h1>
+      <div class="search-bar">
+        <input id="s-search" type="text" placeholder="Search by name or student ID…" oninput="filterStudents()">
+        <select id="s-year" onchange="filterStudents()"><option value="">All years</option></select>
+        <select id="s-school" onchange="filterStudents()"><option value="">All schools</option></select>
+      </div>
+      <div class="status-toggle">
+        <span style="font-size:12px;color:var(--text2);font-family:sans-serif">Show:</span>
+        <label><input type="checkbox" id="show-di" checked="" onchange="filterStudents()"> Active (DI)</label>
+        <label><input type="checkbox" id="show-transferred" onchange="filterStudents()"> Transferred</label>
+        <label><input type="checkbox" id="show-consult" onchange="filterStudents()"> Consult</label>
+        <label><input type="checkbox" id="show-wsod" onchange="filterStudents()"> WSOD</label>
+      </div>
+      <div id="student-list"><div class="empty-state">No students found.<br>Upload score files in the Data tab to get started.</div></div>
+      <div id="student-detail"></div>
+    </div>
+
+    <div id="panel-building" class="panel" style="display: none;">
+      <h1 style="font-size:22px;font-weight:700;margin-bottom:1rem">Building dashboard</h1>
+      <div class="search-bar">
+        <select id="b-school" onchange="renderBuilding()" style="flex:2"><option value="">Select a school…</option></select>
+        <select id="b-year" onchange="renderBuilding()"><option value="">All years</option></select>
+      </div>
+      <div id="building-content"><div class="empty-state">Select a school to view building data.</div></div>
+    </div>
+
+    <div id="panel-district" class="panel" style="display: none;">
+      <h1 style="font-size:22px;font-weight:700;margin-bottom:1rem">District dashboard</h1>
+      <div id="district-content"><div class="empty-state">Upload score files to view district data.</div></div>
+    </div>
+  </main>
+</div>
+
+<script>
+const CURRENT_YEAR = 2026;
+const DOMAINS_MAIN = [
+  {key:'L',label:'Listening',color:'#378ADD'},
+  {key:'R',label:'Reading',color:'#1D9E75'},
+  {key:'S',label:'Speaking',color:'#BA7517'},
+  {key:'W',label:'Writing',color:'#D4537E'},
+  {key:'Composite',label:'Composite',color:'#185FA5'}
+];
+const DOMAINS_ALL = [
+  {key:'L',label:'Listening',color:'#378ADD'},
+  {key:'R',label:'Reading',color:'#1D9E75'},
+  {key:'S',label:'Speaking',color:'#BA7517'},
+  {key:'W',label:'Writing',color:'#D4537E'},
+  {key:'Comp',label:'Comprehension',color:'#7F77DD'},
+  {key:'Lit',label:'Literacy',color:'#D85A30'},
+  {key:'OL',label:'Oral Language',color:'#639922'},
+  {key:'Composite',label:'Composite',color:'#185FA5'}
+];
+
+const LANG={'0010':'Abkhazian','0070':'Afar','0190':'Arabic','0210':'Armenian','0530':'Berber (Other)','0620':'Bosnian','0860':'Chinese (Mandarin)','1030':'Creoles/French-based','1070':'Croatian','1440':'French','1720':'Gujarati','1760':'Haitian Creole','1870':'Hungarian','1920':'Igbo','1980':'Indonesian','2090':'Italian','2100':'Japanese','2410':'Korean','2470':'Kurdish','2930':'Marathi','3200':'Nepali','3590':'Papiamento','3605':'Pashto','3610':'Persian','3670':'Portuguese','3830':'Russian','4071':'Sinhala','4170':'Somali','4260':'Spanish','4310':'Swahili','4350':'Tagalog','4420':'Telugu','4710':'Ukrainian','4730':'Undetermined','4750':'Urdu','4800':'Vietnamese'};
+function getLang(c){if(!c)return'—';const p=String(c).trim().padStart(4,'0');return LANG[p]||LANG[String(c).trim()]||`Code ${c}`;}
+
+let scoreData={}, studentMeta={}, allStudents=[], charts={};
+
+function showPanel(p){
+  document.querySelectorAll('.panel').forEach(el=>{el.classList.remove('active');el.style.display='none'});
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+  const panel=document.getElementById('panel-'+p);
+  panel.classList.add('active');panel.style.display='block';
+  document.getElementById('nav-'+p).classList.add('active');
+  if(p==='student')renderStudentList(getFiltered());
+  if(p==='building')populateBuildingSelects();
+  if(p==='district')renderDistrict();
+}
+
+function handleScoreFiles(files){
+  document.getElementById('score-tags').innerHTML='<span style="font-size:12px;color:var(--text2);font-family:sans-serif">Reading…</span>';
+  let pending=files.length;
+  Array.from(files).forEach(f=>{
+    const yr=detectYear(f.name);
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const wb=XLSX.read(e.target.result,{type:'array'});
+      const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
+      if(yr)scoreData[yr]=normalizeRows(rows,yr);
+      if(--pending===0){buildStudents();refreshSelects();renderSummary();}
+    };
+    reader.readAsArrayBuffer(f);
+  });
+}
+
+function handleStudentFile(f){
+  if(!f)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const wb=XLSX.read(e.target.result,{type:'array'});
+    const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
+    studentMeta={};
+    rows.forEach(r=>{
+      const id=String(r['State Student ID']||'').trim();
+      if(!id)return;
+      const elYrs=parseInt(r['Length of Time in LEP/ELL Program']||0)||0;
+      studentMeta[id]={
+        name:String(r['Student Name']||r['Name']||'').trim()||null,
+        dob:r['Birth Date']||null, gender:r['Gender']||null,
+        nativeLang:r['Native Language']||null,
+        enrollDate:r['Date First Enrolled US School']||null,
+        elYears:elYrs, isLTEL:elYrs>=6,
+        iep:r['IEP Status']==='Y', plan504:r['504 Plan']==='Y',
+        disability:r['Primary Disability']||null,
+        status:String(r['Status']||'DI').trim(),
+        basePL:parseFloat(r['Base PL'])||null,
+        baseSS:parseFloat(r['Base SS'])||null,
+        baseYr:parseYear(r['Base Year']),
+        attSS:parseTargetSS(r['Attainment SS']),
+        attYr:parseYear(r['Attainment Year'])
+      };
+    });
+    document.getElementById('student-tag').innerHTML=`<span class="file-tag">✓ ${f.name} — ${Object.keys(studentMeta).length} students</span>`;
+    buildStudents();refreshSelects();renderSummary();
+  };
+  reader.readAsArrayBuffer(f);
+}
+
+function detectYear(n){const m=n.match(/(20\d\d)/);return m?parseInt(m[1]):null;}
+function parseYear(v){if(!v)return null;const n=parseInt(String(v).trim());return(n>=2010&&n<=2040)?n:null;}
+function parseTargetSS(v){if(!v&&v!==0)return null;const n=parseFloat(String(v).replace(/[^0-9.]/g,''));return(isNaN(n)||n<100||n>600)?null:n;}
+
+function normalizeRows(rows,yr){
+  return rows.map(r=>{
+    const sid=String(r['State Student ID']||'').trim();
+    if(!sid)return null;
+    const school=String(r[`${yr}School`]||r[`${yr} School Name`]||r['2026 School Name']||'').trim();
+    const grade=String(r[`${yr}Grade`]||r[`${yr} Grade`]||'').trim();
+    const obj={sid,school,grade,year:yr};
+    DOMAINS_ALL.forEach(d=>{
+      obj[`${d.key}PL`]=parseFloat(r[`${yr}${d.key}PL`])||null;
+      obj[`${d.key}SS`]=parseFloat(r[`${yr}${d.key}SS`])||null;
+    });
+    return obj;
+  }).filter(Boolean);
+}
+
+function buildStudents(){
+  const byId={};
+  Object.keys(scoreData).forEach(yr=>{
+    scoreData[yr].forEach(row=>{
+      if(!byId[row.sid])byId[row.sid]={sid:row.sid,years:{}};
+      byId[row.sid].years[parseInt(yr)]=row;
+    });
+  });
+  allStudents=Object.values(byId).map(s=>{
+    const meta=studentMeta[s.sid]||{};
+    Object.assign(s,{elYears:null,isLTEL:false,iep:false,plan504:false,status:'DI',...meta});
+    const yrs=Object.keys(s.years).map(Number).sort();
+    s.latestYr=Math.max(...yrs);
+    s.latestRow=s.years[s.latestYr];
+    s.isFirstYear=yrs.length===1;
+    // compute year-over-year growth per domain
+    s.growth={};
+    DOMAINS_ALL.forEach(d=>{
+      s.growth[d.key]={};
+      for(let i=1;i<yrs.length;i++){
+        const a=yrs[i-1],b=yrs[i];
+        const va=s.years[a]?.[`${d.key}SS`], vb=s.years[b]?.[`${d.key}SS`];
+        if(va!=null&&vb!=null) s.growth[d.key][`${a}-${b}`]=+(vb-va).toFixed(1);
+      }
+    });
+    return s;
+  });
+  allStudents.sort((a,b)=>(a.name||a.sid).localeCompare(b.name||b.sid));
+}
+
+// ── Growth utilities ──────────────────────────────────────
+function getAvgGrowth(students, domainKey, yrA, yrB){
+  const deltas=students.map(s=>{
+    const va=s.years[yrA]?.[`${domainKey}SS`], vb=s.years[yrB]?.[`${domainKey}SS`];
+    return(va!=null&&vb!=null)?vb-va:null;
+  }).filter(x=>x!==null);
+  return deltas.length?+(deltas.reduce((a,v)=>a+v,0)/deltas.length).toFixed(1):null;
+}
+
+function getYearPairs(years){
+  const pairs=[];
+  for(let i=1;i<years.length;i++) pairs.push([years[i-1],years[i]]);
+  return pairs;
+}
+
+function deltaColor(v){
+  if(v==null)return'var(--text3)';
+  if(v>0)return'#3B6D11';
+  if(v<0)return'#A32D2D';
+  return'var(--text2)';
+}
+function deltaStr(v,isFirst=false){
+  if(isFirst)return`<span class="delta-new">baseline</span>`;
+  if(v==null)return'<span style="color:var(--text3)">—</span>';
+  const s=v>0?`+${v}`:String(v);
+  return`<span class="${v>0?'delta-pos':v<0?'delta-neg':''}">${s}</span>`;
+}
+
+function getSchools(){return[...new Set(Object.values(scoreData).flat().map(r=>r.school).filter(Boolean))].sort();}
+function getLoadedYears(){return Object.keys(scoreData).map(Number).sort();}
+
+function refreshSelects(){
+  const years=getLoadedYears(), schools=getSchools();
+  ['s-year','b-year'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    const prev=el.value;el.innerHTML='<option value="">All years</option>';
+    years.forEach(y=>{const o=document.createElement('option');o.value=y;o.textContent=y;el.appendChild(o);});
+    if(prev)el.value=prev;
+  });
+  ['s-school','b-school'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    const first=el.options[0]?.text||'All schools';
+    const prev=el.value;el.innerHTML=`<option value="">${first}</option>`;
+    schools.forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s;el.appendChild(o);});
+    if(prev)el.value=prev;
+  });
+}
+
+function renderSummary(){
+  const years=getLoadedYears();
+  const named=allStudents.filter(s=>s.name).length;
+  const ltels=allStudents.filter(s=>s.isLTEL).length;
+  const firstYr=allStudents.filter(s=>s.isFirstYear).length;
+  document.getElementById('score-tags').innerHTML=years.map(y=>`<span class="file-tag">✓ ${y} (${scoreData[y].length})</span>`).join('');
+  document.getElementById('upload-summary').innerHTML=`
+    <div class="metric-grid">${years.map(y=>`<div class="metric"><div class="metric-label">${y}</div><div class="metric-value">${scoreData[y].length}</div><div class="metric-sub">students</div></div>`).join('')}</div>
+    <p style="font-size:12px;color:var(--text2);font-family:sans-serif">${allStudents.length} unique students · ${named} with names · ${ltels} LTEL · ${firstYr} first-year (no prior growth data)</p>`;
+}
+
+function getFiltered(){
+  const q=(document.getElementById('s-search')?.value||'').toLowerCase();
+  const yr=parseInt(document.getElementById('s-year')?.value)||null;
+  const sch=document.getElementById('s-school')?.value||'';
+  const statuses=[];
+  if(document.getElementById('show-di')?.checked)statuses.push('DI');
+  if(document.getElementById('show-transferred')?.checked)statuses.push('Transferred');
+  if(document.getElementById('show-consult')?.checked)statuses.push('Consult');
+  if(document.getElementById('show-wsod')?.checked)statuses.push('WSOD');
+  return allStudents.filter(s=>{
+    if(!statuses.includes(s.status||'DI'))return false;
+    if(q&&!(s.name&&s.name.toLowerCase().includes(q))&&!s.sid.includes(q))return false;
+    if(yr&&!s.years[yr])return false;
+    if(sch&&!Object.values(s.years).some(r=>r.school===sch))return false;
+    return true;
+  });
+}
+
+function filterStudents(){
+  document.getElementById('student-detail').innerHTML='';
+  renderStudentList(getFiltered().slice(0,150));
+}
+
+function renderStudentList(students){
+  const el=document.getElementById('student-list');
+  if(!students.length){el.innerHTML='<div class="empty-state">No students found.<br>Upload score files in the Data tab to get started.</div>';return;}
+  const rows=students.map(s=>{
+    const st=s.status||'DI';
+    const latestSS=s.latestRow?.CompositeSS;
+    const prevYr=s.latestYr-1;
+    const prevSS=s.years[prevYr]?.CompositeSS;
+    const delta=(!s.isFirstYear&&latestSS!=null&&prevSS!=null)?+(latestSS-prevSS).toFixed(0):null;
+    const deltaHtml=s.isFirstYear
+      ?'<span class="badge badge-new">New</span>'
+      :delta!=null?`<span style="font-size:12px;font-weight:700;color:${deltaColor(delta)}">${delta>0?'+':''}${delta}</span>`:'';
+    return`<div class="student-row" onclick="showDetail('${s.sid}')">
+      <div class="student-name">${s.name||`<em style="color:var(--text3)">${s.sid}</em>`}</div>
+      <span class="student-meta">${s.latestRow?s.latestRow.school:''}</span>
+      <span class="student-meta" style="width:40px;text-align:right">Gr ${s.latestRow?s.latestRow.grade:'—'}</span>
+      ${deltaHtml}
+      ${st!=='DI'?`<span class="badge badge-${st.toLowerCase()}">${st}</span>`:''}
+      ${s.isLTEL?'<span class="badge badge-ltel">LTEL</span>':''}
+      ${s.iep?'<span class="badge badge-iep">IEP</span>':''}
+      <span style="color:var(--text3)">›</span>
+    </div>`;
+  }).join('');
+  el.innerHTML=`<div class="card"><div class="card-title">${students.length} student${students.length!==1?'s':''} — composite SS change from prior year shown</div>${rows}</div>`;
+}
+
+function showDetail(sid){
+  const s=allStudents.find(x=>x.sid===sid);
+  if(!s)return;
+  document.getElementById('student-list').innerHTML='';
+  const yrs=Object.keys(s.years).map(Number).sort();
+  const r=s.latestRow;
+  const initials=s.name?s.name.split(' ').filter(Boolean).map(w=>w[0]).join('').slice(0,2).toUpperCase():s.sid.slice(0,2);
+  const fmt=v=>{
+    if(!v||String(v).trim()===''||String(v).trim()==='nan')return'—';
+    const s=String(v).trim();
+    // Excel serial number (XLSX.js returns dates as integers when read as strings)
+    const serial=Number(s);
+    if(!isNaN(serial)&&serial>10000&&serial<80000){
+      // Excel epoch: Jan 1 1900, but has a leap year bug so subtract 1 past Feb 1900
+      const d=new Date(Date.UTC(1900,0,1)+(serial-2)*86400000);
+      return isNaN(d)?s:d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    }
+    // ISO datetime string e.g. "2005-01-01 00:00:00"
+    const clean=s.replace(/\s+\d{2}:\d{2}:\d{2}.*$/,'');
+    const d=new Date(clean+'T00:00:00');
+    return isNaN(d)?s:d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  };
+
+  let html=`<button class="back-btn" onclick="document.getElementById('student-detail').innerHTML='';filterStudents()">← Back to list</button>`;
+
+  if(s.isFirstYear){
+    html+=`<div class="warn">First-year student — 2026 scores are the baseline. Growth data will be available once a second year of ACCESS scores is on file.</div>`;
+  }
+
+  // ── Demo card ──
+  html+=`<div class="card">
+    <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:1rem">
+      <div class="avatar">${initials}</div>
+      <div style="flex:1">
+        <div style="font-size:18px;font-weight:700;margin-bottom:3px">${s.name||`<em style="color:var(--text3)">Name not loaded</em>`}</div>
+        <div style="font-size:13px;color:var(--text2);font-family:sans-serif">${r?r.school:''} · Grade ${r?r.grade:'—'} · ID ${s.sid}</div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:6px">
+          ${s.isFirstYear?'<span class="badge badge-new">First year</span>':''}
+          ${s.isLTEL?'<span class="badge badge-ltel">LTEL</span>':''}
+          ${s.iep?'<span class="badge badge-iep">IEP</span>':''}
+          ${s.plan504?'<span class="badge badge-iep">504</span>':''}
+          ${(s.status&&s.status!=='DI')?`<span class="badge badge-${(s.status||'').toLowerCase()}">${s.status}</span>`:''}
+        </div>
+      </div>
+    </div>
+    <table class="demo-table">
+      <tr><td>Date of birth</td><td>${fmt(s.dob)}</td></tr>
+      <tr><td>Gender</td><td>${s.gender||'—'}</td></tr>
+      <tr><td>Native language</td><td>${getLang(s.nativeLang)}</td></tr>
+      <tr><td>US school entry</td><td>${fmt(s.enrollDate)}</td></tr>
+      <tr><td>Years in EL program</td><td>${s.elYears!==null?s.elYears:'—'}</td></tr>
+      ${s.disability?`<tr><td>Primary disability</td><td>${s.disability}</td></tr>`:''}
+    </table>`;
+
+  // ── PL bars ──
+  if(r){
+    html+=`<div class="section-head">Proficiency levels — ${s.latestYr}</div>`;
+    DOMAINS_ALL.forEach(d=>{
+      const pl=r[`${d.key}PL`];
+      if(!pl)return;
+      html+=`<div class="pl-row">
+        <div class="pl-label">${d.label}</div>
+        <div class="pl-bg"><div class="pl-fill" style="width:${Math.min(pl/6*100,100).toFixed(1)}%;background:${d.color}"></div></div>
+        <div class="pl-num">${pl.toFixed(1)}</div>
+      </div>`;
+    });
+  }
+
+  // ── Attainment goal ──
+  if(s.attSS&&s.attYr){
+    const expired=CURRENT_YEAR>s.attYr;
+    const curSS=r?r.CompositeSS:null;
+    const baseSS=s.baseSS;
+    let pct=0;
+    if(!expired&&curSS&&baseSS){
+      const total=s.attSS-baseSS;
+      const gained=curSS-baseSS;
+      pct=total>0?Math.min(Math.max(gained/total*100,0),100):0;
+    }
+    const baseYrLabel=s.baseYr||Math.min(...yrs);
+    html+=`<div class="section-head">Attainment goal</div>
+    <div style="font-size:12px;color:var(--text2);font-family:sans-serif;margin-bottom:6px">
+      Target: Composite SS ${s.attSS} by ${s.attYr}
+      ${expired?'<span style="margin-left:8px;color:var(--red);font-weight:600;font-size:11px">⚠ Goal year has passed</span>':''}
+    </div>
+    <div class="goal-bg"><div class="goal-fill" style="width:${expired?100:pct.toFixed(1)}%;background:${expired?'#888780':'#185FA5'}"></div></div>
+    <div class="goal-labels">
+      <span>${baseSS?`Base ${baseSS} (${baseYrLabel})`:'Start'}</span>
+      <span>${expired?'Goal period expired':`${pct.toFixed(0)}% of growth achieved`}</span>
+      <span>Goal ${s.attSS} (${s.attYr})</span>
+    </div>`;
+  }
+
+  html+=`</div>`;
+
+  // ── Growth table (all years) ──
+  if(yrs.length>0){
+    const pairs=getYearPairs(yrs);
+    html+=`<div class="card"><div class="card-title">Scale scores and year-over-year growth</div>
+    <table class="growth-table">
+      <thead><tr><th>Domain</th>${yrs.map(y=>`<th>${y}</th>`).join('')}${pairs.map(([a,b])=>`<th>Δ ${a}→${b}</th>`).join('')}</tr></thead>
+      <tbody>`;
+    DOMAINS_MAIN.forEach(d=>{
+      html+=`<tr><td>${d.label}</td>`;
+      yrs.forEach(y=>{
+        const ss=s.years[y]?.[`${d.key}SS`];
+        const pl=s.years[y]?.[`${d.key}PL`];
+        html+=`<td>${ss!=null?`<span style="font-weight:600">${ss}</span>${pl!=null?`<br><span style="font-size:10px;color:var(--text3)">PL ${pl.toFixed(1)}</span>`:''}`:' —'}</td>`;
+      });
+      pairs.forEach(([a,b])=>{
+        const va=s.years[a]?.[`${d.key}SS`], vb=s.years[b]?.[`${d.key}SS`];
+        const isFirstPair=(yrs[0]===a&&s.isFirstYear);
+        html+=`<td>${deltaStr(va!=null&&vb!=null?+(vb-va).toFixed(0):null, isFirstPair)}</td>`;
+      });
+      html+=`</tr>`;
+    });
+    html+=`</tbody></table></div>`;
+  }
+
+  // ── Charts ──
+  if(yrs.length>1){
+    // Growth bar chart (Δ SS per domain per year-pair)
+    html+=`<div class="card"><div class="card-title">Year-over-year scale score growth by domain</div>
+      <div class="chart-wrap" style="height:${Math.max(220, getYearPairs(yrs).length*60+80)}px">
+        <canvas id="c-growth" role="img" aria-label="Year-over-year SS growth by domain"></canvas>
+      </div>
+    </div>`;
+    // Composite SS longitudinal line
+    html+=`<div class="card"><div class="card-title">Composite scale score — all years</div>
+      <div class="chart-wrap" style="height:200px"><canvas id="c-comp" role="img" aria-label="Composite SS over time"></canvas></div>
+    </div>
+    <div class="two-col">
+      <div class="card"><div class="card-title">Listening & Speaking</div>
+        <div class="chart-wrap" style="height:150px"><canvas id="c-ls" role="img" aria-label="L/S SS"></canvas></div>
+      </div>
+      <div class="card"><div class="card-title">Reading & Writing</div>
+        <div class="chart-wrap" style="height:150px"><canvas id="c-rw" role="img" aria-label="R/W SS"></canvas></div>
+      </div>
+    </div>`;
+  }
+
+  document.getElementById('student-detail').innerHTML=html;
+  document.getElementById('student-list').innerHTML='';
+
+  if(yrs.length>1){
+    const pairs=getYearPairs(yrs);
+    const pairLabels=pairs.map(([a,b])=>`${a}→${b}`);
+
+    // Growth bar chart
+    const growthDatasets=DOMAINS_MAIN.map(d=>({
+      label:d.label,
+      data:pairs.map(([a,b])=>{
+        const va=s.years[a]?.[`${d.key}SS`], vb=s.years[b]?.[`${d.key}SS`];
+        return(va!=null&&vb!=null)?+(vb-va).toFixed(0):null;
+      }),
+      backgroundColor:d.color+'CC',borderColor:d.color,borderWidth:1,borderRadius:3
+    }));
+    destroyChart('c-growth');
+    charts['c-growth']=new Chart(document.getElementById('c-growth'),{
+      type:'bar',
+      data:{labels:pairLabels,datasets:growthDatasets},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:true,labels:{boxWidth:10,font:{size:11,family:'sans-serif'}}}},
+        scales:{y:{title:{display:true,text:'ΔSS',font:{size:11,family:'sans-serif'}},
+          grid:{color:'rgba(128,128,128,.15)'}},
+          x:{grid:{display:false}}}}
+    });
+
+    const labels=yrs.map(String);
+    const lineDS=(key,color,dash)=>({
+      label:DOMAINS_ALL.find(d=>d.key===key).label,
+      data:yrs.map(y=>s.years[y]?.[`${key}SS`]||null),
+      borderColor:color,backgroundColor:color+'22',tension:0.3,fill:false,
+      spanGaps:true,pointRadius:4,borderDash:dash||[]
+    });
+    const opts=(legend)=>({responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:legend,labels:{boxWidth:10,font:{size:11,family:'sans-serif'}}}},
+      scales:{y:{min:100,max:500}}});
+    destroyChart('c-comp');
+    charts['c-comp']=new Chart(document.getElementById('c-comp'),{type:'line',
+      data:{labels,datasets:[lineDS('Composite','#185FA5')]},options:opts(false)});
+    destroyChart('c-ls');
+    charts['c-ls']=new Chart(document.getElementById('c-ls'),{type:'line',
+      data:{labels,datasets:[lineDS('L','#378ADD'),lineDS('S','#BA7517',[5,3])]},options:opts(true)});
+    destroyChart('c-rw');
+    charts['c-rw']=new Chart(document.getElementById('c-rw'),{type:'line',
+      data:{labels,datasets:[lineDS('R','#1D9E75'),lineDS('W','#D4537E',[5,3])]},options:opts(true)});
+  }
+}
+
+// ── Building ──────────────────────────────────────────────
+function populateBuildingSelects(){
+  const bs=document.getElementById('b-school');
+  if(bs&&bs.options.length<=1)refreshSelects();
+}
+
+function renderBuilding(){
+  const school=document.getElementById('b-school').value;
+  const filterYr=parseInt(document.getElementById('b-year').value)||null;
+  const el=document.getElementById('building-content');
+  if(!school){el.innerHTML='<div class="empty-state">Select a school to view building data.</div>';return;}
+  const students=allStudents.filter(s=>Object.values(s.years).some(r=>r.school===school));
+  if(!students.length){el.innerHTML='<div class="empty-state">No students found for this school.</div>';return;}
+  const years=getLoadedYears();
+  const relevantYrs=filterYr?[filterYr]:years.filter(y=>students.some(s=>s.years[y]));
+  const latestYr=Math.max(...relevantYrs);
+  const inLatest=students.filter(s=>s.years[latestYr]);
+  const ltels=students.filter(s=>s.isLTEL).length;
+  const ieps=students.filter(s=>s.iep).length;
+  const firstYr=inLatest.filter(s=>s.isFirstYear).length;
+  const pairs=getYearPairs(relevantYrs);
+
+  // avg growth metrics for latest pair
+  const latestPair=pairs.length?pairs[pairs.length-1]:null;
+  let avgGrowthHtml='';
+  if(latestPair){
+    const [a,b]=latestPair;
+    const matched=students.filter(s=>s.years[a]&&s.years[b]);
+    const avgComp=getAvgGrowth(matched,'Composite',a,b);
+    avgGrowthHtml=`<div class="metric"><div class="metric-label">Avg composite growth ${a}→${b}</div>
+      <div class="metric-growth" style="color:${deltaColor(avgComp)}">${avgComp!=null?(avgComp>0?'+':'')+avgComp+'SS':'—'}</div>
+      <div class="metric-sub">${matched.length} matched students</div></div>`;
+  }
+
+  let html=`<div class="metric-grid">
+    <div class="metric"><div class="metric-label">Students (${latestYr})</div><div class="metric-value">${inLatest.length}</div></div>
+    <div class="metric"><div class="metric-label">LTEL</div><div class="metric-value" ${ltels>0?'style="color:var(--coral)"':''}>${ltels}</div></div>
+    <div class="metric"><div class="metric-label">IEP</div><div class="metric-value">${ieps}</div></div>
+    <div class="metric"><div class="metric-label">First year (${latestYr})</div><div class="metric-value">${firstYr}</div><div class="metric-sub">no prior growth data</div></div>
+    ${avgGrowthHtml}
+  </div>`;
+
+  if(pairs.length>0){
+    // Average growth by domain per year-pair — bar chart
+    html+=`<div class="card"><div class="card-title">Average scale score growth by domain and year</div>
+      <div class="chart-wrap" style="height:${Math.max(240,pairs.length*60+100)}px">
+        <canvas id="bc-growth" role="img" aria-label="Avg SS growth by domain at ${school}"></canvas>
+      </div>
+      <div style="font-size:11px;color:var(--text3);font-family:sans-serif;margin-top:8px">Only students present in both years of each pair are included in growth averages.</div>
+    </div>`;
+
+    // Growth trend for composite over year pairs
+    html+=`<div class="card"><div class="card-title">Average composite scale score growth — year over year</div>
+      <div class="chart-wrap" style="height:200px"><canvas id="bc-comp-growth" role="img" aria-label="Avg composite growth trend"></canvas></div>
+    </div>`;
+  }
+
+  // Flagged students
+  // Only flag students whose CURRENT school (latest year row) is this school
+  const currentlyHere=students.filter(s=>s.latestRow&&s.latestRow.school===school);
+  const needInterv=currentlyHere.filter(s=>s.years[latestYr]?.CompositePL&&s.years[latestYr].CompositePL<2);
+  const ltelStudents=currentlyHere.filter(s=>s.isLTEL);
+  html+=`<div class="card"><div class="card-title">Flagged students — ${latestYr}</div>`;
+  if(!needInterv.length&&!ltelStudents.length){
+    html+=`<p style="font-size:13px;color:var(--text2);font-family:sans-serif;padding:4px 0">No students flagged for intervention or LTEL.</p>`;
+  }
+  needInterv.forEach(s=>{
+    const row=s.years[latestYr];
+    const prevSS=s.years[latestYr-1]?.CompositeSS;
+    const delta=prevSS!=null&&row.CompositeSS!=null?+(row.CompositeSS-prevSS).toFixed(0):null;
+    html+=`<div class="flag-row"><span style="flex:1;font-weight:600">${s.name||s.sid}</span>
+      <span style="font-size:12px;color:var(--text2)">PL ${row.CompositePL?.toFixed(1)}</span>
+      ${delta!=null?`<span style="font-size:12px;font-weight:700;color:${deltaColor(delta)}">${delta>0?'+':''}${delta} SS</span>`:''}
+      <span class="badge badge-low">Intervention</span>
+      ${s.isLTEL?'<span class="badge badge-ltel">LTEL</span>':''}
+      ${s.iep?'<span class="badge badge-iep">IEP</span>':''}
+    </div>`;
+  });
+  ltelStudents.filter(s=>!needInterv.includes(s)).forEach(s=>{
+    const row=s.years[latestYr];
+    const prevSS=s.years[latestYr-1]?.CompositeSS;
+    const delta=prevSS!=null&&row?.CompositeSS!=null?+(row.CompositeSS-prevSS).toFixed(0):null;
+    html+=`<div class="flag-row"><span style="flex:1;font-weight:600">${s.name||s.sid}</span>
+      ${row?`<span style="font-size:12px;color:var(--text2)">PL ${row.CompositePL?.toFixed(1)}</span>`:''}
+      ${delta!=null?`<span style="font-size:12px;font-weight:700;color:${deltaColor(delta)}">${delta>0?'+':''}${delta} SS</span>`:''}
+      <span class="badge badge-ltel">LTEL</span>
+      ${s.iep?'<span class="badge badge-iep">IEP</span>':''}
+    </div>`;
+  });
+  html+=`</div>`;
+
+  // Goal growth groups
+  const withGoals=inLatest.filter(s=>s.attSS&&s.attYr&&s.baseSS&&s.years[latestYr]?.CompositeSS&&CURRENT_YEAR<=s.attYr);
+  if(withGoals.length){
+    const progresses=withGoals.map(s=>{
+      const cur=s.years[latestYr].CompositeSS;
+      const total=s.attSS-s.baseSS;
+      const gained=cur-s.baseSS;
+      const baseYr=s.baseYr||Math.min(...Object.keys(s.years).map(Number));
+      const totalYrs=Math.max(s.attYr-baseYr,1);
+      const elapsed=latestYr-baseYr;
+      const expected=total*(elapsed/totalYrs);
+      return expected>0?gained/expected:1;
+    });
+    const avg=progresses.reduce((a,v)=>a+v,0)/progresses.length;
+    let low=0,mid=0,high=0;
+    progresses.forEach(p=>{if(p<avg*0.85)low++;else if(p>avg*1.15)high++;else mid++;});
+    const total=low+mid+high;
+    html+=`<div class="card"><div class="card-title">Growth toward attainment goals — ${latestYr} (${total} students with active goals)</div>
+      <div style="display:flex;gap:16px;font-size:12px;color:var(--text2);font-family:sans-serif;margin-bottom:8px">
+        <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#E24B4A;vertical-align:middle;margin-right:4px"></span>Below average (${low})</span>
+        <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#EF9F27;vertical-align:middle;margin-right:4px"></span>Average (${mid})</span>
+        <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#639922;vertical-align:middle;margin-right:4px"></span>Above average (${high})</span>
+      </div>
+      <div style="height:12px;border-radius:6px;overflow:hidden;display:flex">
+        <div style="width:${(low/total*100).toFixed(1)}%;background:#E24B4A"></div>
+        <div style="width:${(mid/total*100).toFixed(1)}%;background:#EF9F27"></div>
+        <div style="width:${(high/total*100).toFixed(1)}%;background:#639922"></div>
+      </div>
+    </div>`;
+  }
+
+  el.innerHTML=html;
+
+  if(pairs.length>0){
+    // Growth bar chart by domain
+    const growthDatasets=DOMAINS_MAIN.map(d=>({
+      label:d.label,
+      data:pairs.map(([a,b])=>{
+        const matched=students.filter(s=>s.years[a]&&s.years[b]);
+        return getAvgGrowth(matched,d.key,a,b);
+      }),
+      backgroundColor:d.color+'BB',borderColor:d.color,borderWidth:1,borderRadius:3
+    }));
+    destroyChart('bc-growth');
+    charts['bc-growth']=new Chart(document.getElementById('bc-growth'),{
+      type:'bar',
+      data:{labels:pairs.map(([a,b])=>`${a}→${b}`),datasets:growthDatasets},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:true,labels:{boxWidth:10,font:{size:11,family:'sans-serif'}}}},
+        scales:{y:{title:{display:true,text:'Avg ΔSS',font:{size:11,family:'sans-serif'}},
+          grid:{color:'rgba(128,128,128,.15)'}},x:{grid:{display:false}}}}
+    });
+    // Composite growth trend line
+    const compGrowthData=pairs.map(([a,b])=>{
+      const matched=students.filter(s=>s.years[a]&&s.years[b]);
+      return getAvgGrowth(matched,'Composite',a,b);
+    });
+    destroyChart('bc-comp-growth');
+    charts['bc-comp-growth']=new Chart(document.getElementById('bc-comp-growth'),{
+      type:'line',
+      data:{labels:pairs.map(([a,b])=>`${a}→${b}`),
+        datasets:[{label:'Avg composite ΔSS',data:compGrowthData,
+          borderColor:'#185FA5',backgroundColor:'#185FA511',tension:0.3,
+          fill:true,pointRadius:5,spanGaps:true}]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false}},
+        scales:{y:{title:{display:true,text:'Avg ΔSS',font:{size:11,family:'sans-serif'}},
+          grid:{color:'rgba(128,128,128,.15)'}},x:{grid:{display:false}}}}
+    });
+  }
+}
+
+// ── District ──────────────────────────────────────────────
+function renderDistrict(){
+  const el=document.getElementById('district-content');
+  if(!allStudents.length){el.innerHTML='<div class="empty-state">Upload score files to view district data.</div>';return;}
+  const years=getLoadedYears();
+  const schools=getSchools();
+  const pairs=getYearPairs(years);
+  const latestYr=Math.max(...years);
+  const active=allStudents.filter(s=>!s.status||s.status==='DI');
+  const inLatest=active.filter(s=>s.years[latestYr]);
+  const ltels=active.filter(s=>s.isLTEL).length;
+  const firstYr=inLatest.filter(s=>s.isFirstYear).length;
+
+  // latest pair district avg growth
+  const latestPair=pairs.length?pairs[pairs.length-1]:null;
+  let distAvgGrowth=null;
+  if(latestPair){
+    const [a,b]=latestPair;
+    const matched=active.filter(s=>s.years[a]&&s.years[b]);
+    distAvgGrowth=getAvgGrowth(matched,'Composite',a,b);
+  }
+
+  let html=`<div class="metric-grid">
+    <div class="metric"><div class="metric-label">Total EL students</div><div class="metric-value">${allStudents.length}</div><div class="metric-sub">all years</div></div>
+    <div class="metric"><div class="metric-label">Active DI (${latestYr})</div><div class="metric-value">${inLatest.length}</div></div>
+    <div class="metric"><div class="metric-label">LTEL flagged</div><div class="metric-value" ${ltels>0?'style="color:var(--coral)"':''}>${ltels}</div><div class="metric-sub">6+ years EL</div></div>
+    <div class="metric"><div class="metric-label">First year (${latestYr})</div><div class="metric-value">${firstYr}</div><div class="metric-sub">no prior data</div></div>
+    ${latestPair?`<div class="metric"><div class="metric-label">Avg composite growth ${latestPair[0]}→${latestPair[1]}</div>
+      <div class="metric-growth" style="color:${deltaColor(distAvgGrowth)}">${distAvgGrowth!=null?(distAvgGrowth>0?'+':'')+distAvgGrowth+' SS':'—'}</div></div>`:''}
+    <div class="metric"><div class="metric-label">Schools</div><div class="metric-value">${schools.length}</div></div>
+  </div>`;
+
+  if(pairs.length>0){
+    // District growth by domain — grouped bar
+    html+=`<div class="card"><div class="card-title">District average scale score growth by domain — year over year</div>
+      <div class="chart-wrap" style="height:${Math.max(260,pairs.length*60+100)}px">
+        <canvas id="dc-growth" role="img" aria-label="District avg growth by domain"></canvas>
+      </div>
+      <div style="font-size:11px;color:var(--text3);font-family:sans-serif;margin-top:8px">Only students present in both years of each pair are included in growth averages.</div>
+    </div>`;
+
+    // Composite growth trend
+    html+=`<div class="card"><div class="card-title">District average composite scale score growth — year over year</div>
+      <div class="chart-wrap" style="height:200px"><canvas id="dc-comp-growth" role="img" aria-label="District composite growth trend"></canvas></div>
+    </div>`;
+  }
+
+  // Per-school growth summary
+  html+=`<div class="section-head">Average composite scale score growth by school</div>`;
+  if(pairs.length>0){
+    // table: school × year-pair
+    html+=`<div class="card"><div class="card-title">Avg ΔComposite SS — matched students only</div>
+    <table class="growth-table"><thead><tr><th>School</th>${pairs.map(([a,b])=>`<th>${a}→${b}</th>`).join('')}</tr></thead><tbody>`;
+    schools.forEach(sch=>{
+      html+=`<tr><td>${sch}</td>`;
+      pairs.forEach(([a,b])=>{
+        const matched=allStudents.filter(s=>s.years[a]&&s.years[b]&&
+          (s.years[a].school===sch||s.years[b].school===sch));
+        const avg=getAvgGrowth(matched,'Composite',a,b);
+        html+=`<td>${avg!=null?`<span style="font-weight:700;color:${deltaColor(avg)}">${avg>0?'+':''}${avg}</span>`:'—'}</td>`;
+      });
+      html+=`</tr>`;
+    });
+    html+=`</tbody></table></div>`;
+  }
+
+  // PL distribution bars
+  html+=`<div class="section-head">Proficiency distribution by school and year</div>`;
+  schools.forEach(sch=>{
+    html+=`<div style="margin-bottom:1.25rem"><div style="font-size:13px;font-weight:600;font-family:sans-serif;margin-bottom:.4rem">${sch}</div>`;
+    years.forEach(y=>{
+      const inYr=(scoreData[y]||[]).filter(r=>r.school===sch);
+      if(!inYr.length)return;
+      const avg=inYr.reduce((a,r)=>a+(r.CompositePL||0),0)/inYr.length;
+      const low=inYr.filter(r=>r.CompositePL&&r.CompositePL<2).length;
+      const high=inYr.filter(r=>r.CompositePL&&r.CompositePL>=4).length;
+      const mid=inYr.length-low-high;
+      html+=`<div class="school-yr-row">
+        <span style="width:38px;color:var(--text3)">${y}</span>
+        <span style="width:30px;color:var(--text3)">${inYr.length}</span>
+        <div class="dist-bar">
+          <div style="width:${(low/inYr.length*100).toFixed(1)}%;background:#E24B4A"></div>
+          <div style="width:${(mid/inYr.length*100).toFixed(1)}%;background:#EF9F27"></div>
+          <div style="width:${(high/inYr.length*100).toFixed(1)}%;background:#639922"></div>
+        </div>
+        <span style="width:44px;text-align:right;color:var(--text3)">PL ${avg.toFixed(1)}</span>
+      </div>`;
+    });
+    html+=`</div>`;
+  });
+  html+=`<div style="display:flex;gap:14px;font-size:11px;color:var(--text3);font-family:sans-serif;margin-bottom:2rem">
+    <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#E24B4A;vertical-align:middle;margin-right:4px"></span>PL &lt; 2.0</span>
+    <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#EF9F27;vertical-align:middle;margin-right:4px"></span>PL 2.0–3.9</span>
+    <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#639922;vertical-align:middle;margin-right:4px"></span>PL ≥ 4.0</span>
+  </div>`;
+
+  el.innerHTML=html;
+
+  if(pairs.length>0){
+    const pairLabels=pairs.map(([a,b])=>`${a}→${b}`);
+    const growthDatasets=DOMAINS_MAIN.map(d=>({
+      label:d.label,
+      data:pairs.map(([a,b])=>{
+        const matched=active.filter(s=>s.years[a]&&s.years[b]);
+        return getAvgGrowth(matched,d.key,a,b);
+      }),
+      backgroundColor:d.color+'BB',borderColor:d.color,borderWidth:1,borderRadius:3
+    }));
+    destroyChart('dc-growth');
+    charts['dc-growth']=new Chart(document.getElementById('dc-growth'),{
+      type:'bar',
+      data:{labels:pairLabels,datasets:growthDatasets},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:true,labels:{boxWidth:10,font:{size:11,family:'sans-serif'}}}},
+        scales:{y:{title:{display:true,text:'Avg ΔSS',font:{size:11,family:'sans-serif'}},
+          grid:{color:'rgba(128,128,128,.15)'}},x:{grid:{display:false}}}}
+    });
+    const compGrowthTrend=pairs.map(([a,b])=>{
+      const matched=active.filter(s=>s.years[a]&&s.years[b]);
+      return getAvgGrowth(matched,'Composite',a,b);
+    });
+    destroyChart('dc-comp-growth');
+    charts['dc-comp-growth']=new Chart(document.getElementById('dc-comp-growth'),{
+      type:'line',
+      data:{labels:pairLabels,datasets:[{label:'Avg composite ΔSS',data:compGrowthTrend,
+        borderColor:'#185FA5',backgroundColor:'#185FA511',tension:0.3,fill:true,pointRadius:5,spanGaps:true}]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false}},
+        scales:{y:{title:{display:true,text:'Avg ΔSS',font:{size:11,family:'sans-serif'}},
+          grid:{color:'rgba(128,128,128,.15)'}},x:{grid:{display:false}}}}
+    });
+  }
+}
+
+function destroyChart(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
+document.querySelectorAll('.panel').forEach(el=>el.style.display='none');
+document.getElementById('panel-upload').style.display='block';
+renderStudentList([]);
+</script>
+
+
+</body></html>
